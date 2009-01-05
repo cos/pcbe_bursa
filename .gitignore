@@ -1,0 +1,6 @@
+/build.xml
+/manifest.mf
+/nbproject
+/.project
+/.classpath
+*.class
