@@ -1,1 +1,0 @@
-Proiectu' nostru smecher.
