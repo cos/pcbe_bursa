@@ -1,11 +1,11 @@
 package bursa;
 
-public class Oferta {
+public class OfertaVanzare {
 	private String numeCompanie;
 	private int nrActiuni;
 	private int pret;
 	
-	public Oferta(String numeCompanie, int nrActiuni, int pret) {
+	public OfertaVanzare(String numeCompanie, int nrActiuni, int pret) {
 		this.numeCompanie = numeCompanie;
 		this.nrActiuni = nrActiuni;
 		this.pret = pret;

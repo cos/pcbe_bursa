@@ -2,15 +2,14 @@ package bursa;
 
 import dispatch.Event;
 
-public class BursaEvent extends Event {
-	private Oferta oferta;
+public class BursaEvent implements Event {
+	private OfertaVanzare oferta;
 	
-	public BursaEvent(String type, Oferta oferta) {
-		super(type);
+	public BursaEvent(String type, OfertaVanzare oferta) {
 		this.oferta = oferta;
 	}
 
-	public Oferta getOferta() {
+	public OfertaVanzare getOferta() {
 		return oferta;
 	}
 }

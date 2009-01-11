@@ -2,40 +2,37 @@ package bursa;
 
 import java.util.HashMap;
 
-import dispatch.Dispatcher;
-import dispatch.EventDispatcher;
-import dispatch.Listener;
+import dispatch.*;
 
 public class Bursa {
-	HashMap<String, Oferta> oferte = new HashMap<String, Oferta>();
+	HashMap<String, OfertaVanzare> oferte = new HashMap<String, OfertaVanzare>();
 	Dispatcher dispatcher = new EventDispatcher();
 	
-	public void creeazaOferta(String numeCompanie, int nrActiuni, int pret) {
-		if (!oferte.containsKey(numeCompanie)) {
-			Oferta oferta = new Oferta(numeCompanie, nrActiuni, pret);
-			oferte.put(numeCompanie, oferta);
-			dispatcher.dispatch(new BursaEvent(BursaEventType.AparitieOferta.toString(), oferta));
-		}		
+	public OfertaVanzare creeazaOfertaVanzare(String numeCompanie, int nrActiuni, int pret) {
+        OfertaVanzare oferta = new OfertaVanzare(numeCompanie, nrActiuni, pret);
+        oferte.put(numeCompanie,oferta);
+        dispatcher.dispatch(new OfertaVanzareEvent(oferta));
+        return oferta;
 	}
 	
 	public void modificaPret(String numeCompanie, int pretNou) {
-		if (oferte.containsKey(numeCompanie)) {
-			oferte.get(numeCompanie).setPret(pretNou);
-			dispatcher.dispatch(new BursaEvent(BursaEventType.ModificareOferta.toString(), oferte.get(numeCompanie)));			
-		}
+        oferte.get(numeCompanie).setPret(pretNou);
+        dispatcher.dispatch(new OfertaVanzareEvent(oferte.get(numeCompanie)));		
 	}
-	
-	// nrActiuni este un increment cu care sa se modifice
-	// nr de actiuni; poate fi si negativ
-	public void modificaActiuni(String numeCompanie, int nrActiuni) {
-		if (oferte.containsKey(numeCompanie)) {
-			Oferta oferta = oferte.get(numeCompanie);
-			oferta.setNrActiuni(oferta.getNrActiuni() + nrActiuni);
-			dispatcher.dispatch(new BursaEvent(BursaEventType.ModificareOferta.toString(), oferta));
-		}
+
+	public void lanseazaOfertaCumparare(String numeCumparator, String numeVanzator, OfertaVanzare o,int pret) {
+        OfertaCumparare oc = new OfertaCumparare(numeCumparator, o, pret);
+        if(o.getPret() <= pret)
+        {
+            this.oferte.remove(numeVanzator);
+            this.dispatcher.dispatch(new TranzactieFinalizataEvent(o, oc));
+        } else
+        {
+            this.dispatcher.dispatch(new OfertaCumparareEvent(oc));
+        }
 	}
-	
-	public void inregistrareLaEveniment(BursaEventType tipEveniment, Listener listener) {
-		dispatcher.registerListener(tipEveniment.toString(), listener);
+
+	public void inregistrareLaEveniment(Listener listener, EventFilter f) {
+		dispatcher.registerListener(f, listener);
 	}
 }

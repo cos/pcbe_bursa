@@ -5,3 +5,5 @@
 /.classpath
 *.class
 /dist
+/build
+*.xml
