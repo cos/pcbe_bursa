@@ -4,20 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EventDispatcher implements Dispatcher {
-	private HashMap<String, ArrayList<Listener>> hashListeners = new HashMap<String, ArrayList<Listener>>();
+    private class Entry
+    {
+        public Entry(Listener l, EventFilter f)
+        {
+            this.l = l;
+            this.f = f;
+        }
+        public Listener l;
+        public EventFilter f;
+    }
+
+	private ArrayList<Entry> entries = new ArrayList<Entry>();
 	
 	public void dispatch(Event event) {
-		if (hashListeners.containsKey(event.getType())) {
-			for (Listener listener : hashListeners.get(event.getType())) {
-				listener.consumeEvent(event);
-			}
-		}
+        for (Entry entry : entries) {
+            if(entry.f.accept(event))
+                entry.l.consumeEvent(event);
+        }
 	}
 
-	public void registerListener(String eventType, Listener listener) {
-		if (!hashListeners.containsKey(eventType)) {
-			hashListeners.put(eventType, new ArrayList<Listener>());
-		}
-		hashListeners.get(eventType).add(listener);
+	public void registerListener(EventFilter ev, Listener listener) {
+		entries.add(new Entry(listener, ev));
 	}
 }

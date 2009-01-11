@@ -1,13 +1,6 @@
 package dispatch;
 
-public class Event {
-	private String type;
-	
-	public Event(String type) {
-		this.type = type;
-	}
-	
-	public String getType() {
-		return type;
-	}
+// General interface that specifies it can act as an event
+public interface Event {
+
 }
